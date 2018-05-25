@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Countdown</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: inherit;
+        }
+        html {
+            font-size: 62.5%;
+        }
+        body {
+            box-sizing: border-box;
+            font-family: sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+        }
+        .countdown {
+            font-size: 2rem;
+            font-family: Menlo, Monaco, monospace;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="countdown" id="countdown">
+        <span class="countdown__day" id="countdown__day">0</span> days,
+        <span class="countdown__hou" id="countdown__hou">0</span> hrs,
+        <span class="countdown__min" id="countdown__min">0</span> mins,
+        <span class="countdown__sec" id="countdown__sec">0</span> secs,
+        <span class="countdown__mil" id="countdown__mil">0</span> ms
+    </div>
+    <script>
+        const zpad = (s, width) => s.length >= width ? s : (new Array(width).join('0') + s).slice(-width)
+        const msPerDay = 8.64e+7
+        const msPerHou = 3.60e+6
+        const msPerMin = 6.00e+4
+        const msPerSec = 1.00e+3
+        const countdown    = document.getElementById('countdown')
+        const countdownDay = document.getElementById('countdown__day')
+        const countdownHou = document.getElementById('countdown__hou')
+        const countdownMin = document.getElementById('countdown__min')
+        const countdownSec = document.getElementById('countdown__sec')
+        const countdownMil = document.getElementById('countdown__mil')
+
+        let targetDate = new Date('2018-06-18').getTime()
+        const getCurrentCountdown = () => {
+            let ms = targetDate - new Date().getTime()
+            const day = Math.floor(ms / msPerDay); ms -= day * msPerDay
+            const hou = Math.floor(ms / msPerHou); ms -= hou * msPerHou
+            const min = Math.floor(ms / msPerMin); ms -= min * msPerMin
+            const sec = Math.floor(ms / msPerSec); ms -= sec * msPerSec
+            const mil = ms
+            return { day, hou, min, sec, mil }
+        }
+
+        const updateCountdown = () => {
+            const { day, hou, min, sec, mil } = getCurrentCountdown()
+            countdownDay.textContent = day
+            countdownHou.textContent = zpad(hou, 2)
+            countdownMin.textContent = zpad(min, 2)
+            countdownSec.textContent = zpad(sec, 2)
+            countdownMil.textContent = zpad(mil, 3)
+            window.requestAnimationFrame(updateCountdown)
+        }
+        updateCountdown()
+    </script>
+</body>
+</html>
